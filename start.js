@@ -206,4 +206,14 @@ client.on('interactionCreate', async (interaction) => {
         }
     }
 });
+/*
+LOAD EVENTS
+*/
+const setupPanel = require('./events/setupPanel');
+
+setupPanel(client);
+
+/*
+LOGIN
+*/
 client.login(TOKEN);
