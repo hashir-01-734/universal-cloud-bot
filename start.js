@@ -31,7 +31,8 @@ const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildMembers
     ]
 });
 
@@ -61,7 +62,9 @@ for (const file of commandFiles) {
     const command = require(filePath);
 
     if (!command.name || !command.execute) {
+
         console.log(`[WARNING] ${file} is missing "name" or "execute".`);
+
         continue;
     }
 
@@ -73,6 +76,7 @@ for (const file of commandFiles) {
     LOAD SLASH COMMANDS
     */
     if (command.data) {
+
         slashCommands.push(command.data.toJSON());
     }
 }
@@ -98,7 +102,6 @@ const rest = new REST({ version: '10' }).setToken(TOKEN);
     } catch (error) {
 
         console.error(error);
-
     }
 
 })();
@@ -142,7 +145,6 @@ client.on('messageCreate', async (message) => {
         console.error(error);
 
         message.channel.send('❌ Error executing command.');
-
     }
 });
 
@@ -162,25 +164,22 @@ client.on('interactionCreate', async (interaction) => {
         if (command.slashExecute) {
 
             await command.slashExecute(interaction);
-
         }
 
     } catch (error) {
 
         console.error(error);
 
-        await interaction.reply({
-            content: '❌ Error executing slash command.',
-            ephemeral: true
-        });
+        if (!interaction.replied) {
 
+            await interaction.reply({
+                content: '❌ Error executing slash command.',
+                flags: 64
+            });
+        }
     }
-
 });
 
-/*
-LOGIN
-*/
 /*
 MODAL HANDLER
 */
@@ -188,30 +187,46 @@ client.on('interactionCreate', async (interaction) => {
 
     if (!interaction.isModalSubmit()) return;
 
+    /*
+    FORMSAY
+    */
     if (interaction.customId === 'formsay_modal') {
 
         const command = client.commands.get('formsay');
 
         if (command && command.handleModal) {
+
             await command.handleModal(interaction);
         }
     }
 
+    /*
+    EMBED FORMSAY
+    */
     if (interaction.customId === 'embedformsay_modal') {
 
         const command = client.commands.get('embedformsay');
 
         if (command && command.handleModal) {
+
             await command.handleModal(interaction);
         }
     }
 });
+
 /*
-LOAD EVENTS
+LOAD TICKET SETUP EVENT
 */
 const setupPanel = require('./events/setupPanel');
 
 setupPanel(client);
+
+/*
+LOAD WELCOME SYSTEM EVENT
+*/
+const welcomeSystem = require('./events/welcomeSystem');
+
+welcomeSystem(client);
 
 /*
 LOGIN
