@@ -14,25 +14,23 @@ module.exports = {
     execute: async () => {},
 
     data: new SlashCommandBuilder()
-
         .setName('welcome')
-
         .setDescription('Welcome system configuration')
 
         .addSubcommand(subcommand =>
-
             subcommand
-
                 .setName('setup')
-
                 .setDescription('Open welcome setup panel')
         )
 
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+        .setDefaultMemberPermissions(
+            PermissionFlagsBits.Administrator
+        ),
 
     async slashExecute(interaction) {
 
-        const subcommand = interaction.options.getSubcommand();
+        const subcommand =
+            interaction.options.getSubcommand();
 
         /*
         /welcome setup
@@ -72,27 +70,18 @@ module.exports = {
                 .addComponents(
 
                     new ButtonBuilder()
-
                         .setCustomId('welcome_set_channel')
-
                         .setLabel('Set Channel')
-
                         .setStyle(ButtonStyle.Primary),
 
                     new ButtonBuilder()
-
                         .setCustomId('welcome_set_title')
-
                         .setLabel('Set Title')
-
                         .setStyle(ButtonStyle.Primary),
 
                     new ButtonBuilder()
-
                         .setCustomId('welcome_set_description')
-
                         .setLabel('Set Description')
-
                         .setStyle(ButtonStyle.Primary)
                 );
 
@@ -104,27 +93,18 @@ module.exports = {
                 .addComponents(
 
                     new ButtonBuilder()
-
                         .setCustomId('welcome_set_color')
-
                         .setLabel('Set Color')
-
                         .setStyle(ButtonStyle.Secondary),
 
                     new ButtonBuilder()
-
                         .setCustomId('welcome_toggle_ping')
-
                         .setLabel('Toggle Ping')
-
                         .setStyle(ButtonStyle.Secondary),
 
                     new ButtonBuilder()
-
                         .setCustomId('welcome_test')
-
                         .setLabel('Test Message')
-
                         .setStyle(ButtonStyle.Success)
                 );
 
